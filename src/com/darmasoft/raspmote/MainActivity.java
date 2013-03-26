@@ -1,5 +1,6 @@
 package com.darmasoft.raspmote;
 
+import java.util.Date;
 import java.util.Locale;
 
 import android.os.Bundle;
@@ -101,6 +102,12 @@ public class MainActivity extends FragmentActivity {
     	switch(item.getItemId()) {
     	case R.id.item_debug:
     		Log.d(TAG, "debug item selected");
+    		RaspbmcHost host = new RaspbmcHost("raspbmc", "192.168.248.198", 80, 0, new Date(), new Date());
+    		if (host.insert()) {
+    			Log.d(TAG,  "inserted host with id: "+ host.id());
+    		} else {
+    			Log.e(TAG, "failed to insert host");
+    		}
     		break;
     	case R.id.action_settings:
     		Log.d(TAG, "settings selected");
