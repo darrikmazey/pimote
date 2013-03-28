@@ -29,6 +29,7 @@
             android:authorities="com.darmasoft.raspmote.raspbmc_host_provider" 
             android:name="RaspbmcHostProvider">
         </provider>
+        <activity android:name="ConnectionDetailsActivity"></activity>
     </application>
 
 </manifest>

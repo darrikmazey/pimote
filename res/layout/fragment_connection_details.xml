@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <RelativeLayout android:id="@+id/fragment_details_top_frame"
+        android:background="#33b5e5"
+        android:layout_width="fill_parent"
+        android:layout_height="35dip"
+        android:orientation="horizontal"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        >
+        
+        <Button android:id="@+id/fragment_details_save"
+            android:text="Save"
+            android:background="@android:color/transparent"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            />
+        <Button android:id="@+id/fragment_details_cancel"
+            android:text="Cancel"
+            android:background="@android:color/transparent"
+            android:textColor="#ffffff"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_alignParentLeft="true"
+            />
+        
+    </RelativeLayout>
+
+    <LinearLayout android:id="@+id/fragment_details_name_line"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/fragment_details_top_frame"
+        android:padding="5dip"
+        android:layout_marginTop="10dip"
+        >
+
+	    <TextView
+	        android:id="@+id/fragment_details_name_label"
+	        android:layout_width="80dip"
+	        android:layout_height="wrap_content"
+	        android:padding="5dip"
+	        android:textSize="16sp"
+	        android:textStyle="bold"
+	        android:text="Name" />
+    
+	    <EditText android:id="@+id/fragment_details_name"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:inputType="text"
+	        android:padding="5dip"
+	        />
+    </LinearLayout>
+    
+    <LinearLayout android:id="@+id/fragment_details_host_line"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/fragment_details_name_line"
+        android:padding="5dip" >
+
+		<TextView
+            android:id="@+id/fragment_details_host_label"
+            android:layout_width="80dip"
+            android:layout_height="wrap_content"
+	        android:textSize="16sp"
+	        android:textStyle="bold"
+	        android:padding="5dip"
+            android:text="Host" />
+
+        <EditText
+            android:id="@+id/fragment_details_host"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:inputType="text"
+            android:padding="5dip" />
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/fragment_details_port_line"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/fragment_details_host_line"
+        android:padding="5dip" >
+
+		<TextView
+            android:id="@+id/fragment_details_port_label"
+            android:layout_width="80dip"
+            android:layout_height="wrap_content"
+	        android:textSize="16sp"
+	        android:textStyle="bold"
+	        android:padding="5dip"
+            android:text="Port" />
+
+        <EditText
+            android:id="@+id/fragment_details_port"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:inputType="number"
+            android:padding="5dip" />
+    </LinearLayout>
+    
+</RelativeLayout>

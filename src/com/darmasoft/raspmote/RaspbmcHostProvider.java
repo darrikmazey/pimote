@@ -73,7 +73,7 @@ public class RaspbmcHostProvider extends ContentProvider {
 				SQLiteDatabase db = _d.getWritableDatabase();
 				long id = db.insert(RaspbmcHost.table_name(), null, values);
 				Log.d(TAG,  "notifying: " + uri.toString());
-				getContext().getContentResolver().notifyChange(uri, null);
+				getContext().getContentResolver().notifyChange(CONTENT_URI, null);
 				return(CONTENT_URI.buildUpon().appendPath(Long.toString(id)).build());
 			default:
 				throw new UnsupportedOperationException("URI: " + uri + " not supported.");
@@ -91,13 +91,19 @@ public class RaspbmcHostProvider extends ContentProvider {
 			String[] selectionArgs, String sortOrder) {
 		Log.d(TAG,  "query()");
 		SQLiteDatabase db = _d.getReadableDatabase();
+		Cursor cursor;
 		switch(_uri_matcher.match(uri)) {
 			case _collection_token:
 				Log.d(TAG, "querying " + RaspbmcHost.table_name());
-				Cursor cursor = db.query(RaspbmcHost.table_name(), null, null, null, null, null, null);
+				cursor = db.query(RaspbmcHost.table_name(), null, null, null, null, null, null);
 				cursor.setNotificationUri(getContext().getContentResolver(), uri);
 				return(cursor);
 			case _member_token:
+				int id = RaspbmcHostProvider.get_id_from_uri(uri);
+				Log.d(TAG, "querying " + RaspbmcHost.table_name() + " for id " + id);
+				cursor = db.query(RaspbmcHost.table_name(), null, "_id = ?", new String[] { Integer.toString(id) }, null, null, null);
+				cursor.setNotificationUri(getContext().getContentResolver(), uri);
+				return(cursor);
 			default:
 				return null;
 		}
@@ -106,8 +112,20 @@ public class RaspbmcHostProvider extends ContentProvider {
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
-		// TODO Auto-generated method stub
-		return 0;
+		Log.d(TAG, "update(" + uri.toString() + ")");
+		SQLiteDatabase db = _d.getWritableDatabase();
+		switch(_uri_matcher.match(uri)) {
+			case _collection_token:
+				throw new UnsupportedOperationException("URI: " + uri + " not supported.");
+			case _member_token:
+				int id = RaspbmcHostProvider.get_id_from_uri(uri);
+				Log.d(TAG, "updating " + RaspbmcHost.table_name() + " for id " + id);
+				int rows = db.update(RaspbmcHost.table_name(), values, "_id = ?", new String[] { Integer.toString(id) });
+				getContext().getContentResolver().notifyChange(CONTENT_URI, null);
+				return(rows);
+			default:
+				throw new UnsupportedOperationException("URI: " + uri + " not supported.");
+		}
 	}
 
 }

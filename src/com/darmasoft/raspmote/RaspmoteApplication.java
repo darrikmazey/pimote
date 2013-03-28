@@ -10,7 +10,6 @@ public class RaspmoteApplication extends Application {
 	private static RaspmoteApplication _instance = null;
 	
 	private int _current_host_id = -1;
-	private RaspbmcHost _current_host = null;
 	
 	public RaspmoteApplication() {
 		_instance = this;
@@ -33,10 +32,7 @@ public class RaspmoteApplication extends Application {
 	
 	public RaspbmcHost current_host() {
 		if (_current_host_id > 0) {
-			if (_current_host == null) {
-				_current_host = RaspbmcHost.find_by_id(_current_host_id);
-			}
-			return(_current_host);
+			return(RaspbmcHost.find_by_id(_current_host_id));
 		} else {
 			return(null);
 		}
@@ -48,7 +44,6 @@ public class RaspmoteApplication extends Application {
 	public void raspbmc_host_deleted(int id) {
 		if (_current_host_id == id) {
 			_current_host_id = -1;
-			_current_host = null;
 		}
 	}
 	

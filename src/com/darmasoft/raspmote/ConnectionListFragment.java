@@ -2,6 +2,7 @@ package com.darmasoft.raspmote;
 
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -111,6 +112,10 @@ public class ConnectionListFragment extends Fragment
 				break;
 			case R.id.connection_list_item_context_edit:
 				Log.d(TAG,  "editing item: " + _context_item_id);
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), ConnectionDetailsActivity.class);
+				intent.putExtra("id", _context_item_id);
+				startActivity(intent);
 				break;
 		}
 		return super.onContextItemSelected(item);
@@ -130,6 +135,10 @@ public class ConnectionListFragment extends Fragment
 		switch(item.getItemId()) {
 			case 0:
 				Log.d(TAG, "New Connection");
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), ConnectionDetailsActivity.class);
+				intent.putExtra("id", 0);
+				startActivity(intent);				
 				break;
 			default:
 				handled = false;

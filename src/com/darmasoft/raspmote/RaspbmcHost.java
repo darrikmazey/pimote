@@ -30,11 +30,33 @@ public class RaspbmcHost extends DBObject {
 	public RaspbmcHost() {
 	}
 
-	public RaspbmcHost(String name, String host, int port, int id, Date created_at, Date updated_at) {
+	public static RaspbmcHost from_cursor(Cursor c) {
+		if (c.moveToFirst()) {
+			int id = c.getInt(c.getColumnIndex("_id"));
+			String name = c.getString(c.getColumnIndex("name"));
+			String host = c.getString(c.getColumnIndex("host"));
+			int port = c.getInt(c.getColumnIndex("port"));
+			Date ca = new Date();
+			Date ua = ca;
+			
+			try {
+				ca = DateHelper.sqlStringToDate(c.getString(c.getColumnIndex("created_at")));
+				ua = DateHelper.sqlStringToDate(c.getString(c.getColumnIndex("updated_at")));
+			} catch (ParseException e) {
+			}
+			
+			return(new RaspbmcHost(name, host, port, id, ca, ua, false));
+		}
+		return(null);
+	}
+		
+	public RaspbmcHost(String name, String host, int port, int id, Date created_at, Date updated_at, boolean new_record) {
 		super(id, created_at, updated_at);
 		_name = name;
 		_host = host;
 		_port = port;
+		_new_record = new_record;
+		_dirty = new_record;
 	}
 
 	public String name() {
@@ -92,42 +114,49 @@ public class RaspbmcHost extends DBObject {
    		values.put("created_at", created_at_str);
    		values.put("updated_at", updated_at_str);
    		
-   		try {
-   			Uri uri = RaspmoteApplication.get_context().getContentResolver().insert(RaspbmcHostProvider.CONTENT_URI, values);
-			_id = RaspbmcHostProvider.get_id_from_uri(uri);
-		} catch (SQLiteConstraintException e) {
+   		Uri uri = RaspmoteApplication.get_context().getContentResolver().insert(RaspbmcHostProvider.CONTENT_URI, values);
+   		_id = RaspbmcHostProvider.get_id_from_uri(uri);
+
+   		return(true);
+	}
+	
+	public boolean save() {
+		Log.d(TAG, "save(" + _id + ")");
+		if (!_dirty) {
+			Log.d(TAG, "not dirty: aborting");
 			return(false);
 		}
-   		return(true);
+		if (_new_record) {
+			return(insert());
+		}
+		
+		ContentValues values = new ContentValues();
+		values.clear();
+		
+		Date now = new Date();
+		String updated_at_str = DateHelper.dateToSqlString(now);
+		values.put("updated_at", updated_at_str);
+		values.put("name", _name);
+		values.put("host", _host);
+		values.put("port", _port);
+
+		Uri uri = RaspbmcHostProvider.CONTENT_URI.buildUpon().appendPath(Integer.toString(_id)).build();
+		int rows = RaspmoteApplication.get_context().getContentResolver().update(uri, values, null, null);
+		if (rows == 1) {
+			_dirty = false;
+			_new_record = false;
+			return(true);
+		} else {
+			return(false);
+		}
 	}
 	
 	// selects
 	public static RaspbmcHost find_by_id(int id) {
 		if (id > 0) {
-			String[] columns = new String[] { "_id", "name", "host", "port", "created_at", "updated_at" };
-			String selection = "_id = ?";
-			String[] selectionArgs = new String[] { Integer.toString(id) };
-
-			DB d = new DB(RaspmoteApplication.get_context());
-			SQLiteDatabase db = d.getReadableDatabase();
-			Cursor c = db.query(_table_name, columns, selection, selectionArgs, null, null, null);
-			if (c.getCount() > 0) {
-				c.moveToFirst();
-				String name = c.getString(c.getColumnIndex("name"));
-				String host = c.getString(c.getColumnIndex("host"));
-				int port = c.getInt(c.getColumnIndex("port"));
-				Date created_at;
-				Date updated_at;
-				try {
-					created_at = DateHelper.sqlStringToDate(c.getString(c.getColumnIndex("created_at")));
-					updated_at = DateHelper.sqlStringToDate(c.getString(c.getColumnIndex("updated_at")));
-				} catch (ParseException e) {
-					created_at = new Date();
-					updated_at = created_at;
-				}
-				db.close();
-				return(new RaspbmcHost(name, host, port, id, created_at, updated_at));
-			}
+			Uri uri = RaspbmcHostProvider.CONTENT_URI.buildUpon().appendPath(Integer.toString(id)).build();
+			Cursor cursor = RaspmoteApplication.get_context().getContentResolver().query(uri, null, null, null, null);
+			return(RaspbmcHost.from_cursor(cursor));
 		}
 		return(null);
 	}

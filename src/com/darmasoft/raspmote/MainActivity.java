@@ -71,7 +71,7 @@ public class MainActivity extends FragmentActivity {
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
-			if (position == 0) {
+			if (position >= 0) {
 				Fragment fragment = new ConnectionListFragment();
 				Bundle args = new Bundle();
 				fragment.setArguments(args);
@@ -104,7 +104,7 @@ public class MainActivity extends FragmentActivity {
     	switch(item.getItemId()) {
     	case R.id.item_debug:
     		Log.d(TAG, "debug item selected");
-    		RaspbmcHost host = new RaspbmcHost("raspbmc", "192.168.248.198", 80, 0, new Date(), new Date());
+    		RaspbmcHost host = new RaspbmcHost("raspbmc", "192.168.248.198", 80, 0, new Date(), new Date(), true);
     		if (host.insert()) {
     			Log.d(TAG,  "inserted host with id: "+ host.id());
     		} else {
