@@ -27,7 +27,11 @@ public class DBObject extends Object {
 		_updated_at = updated_at;
 	}
 	
-	public String table_name() {
+	public static String table_name() {
+		return(_table_name);
+	}
+	
+	public String get_table_name() {
 		return(_table_name);
 	}
 	

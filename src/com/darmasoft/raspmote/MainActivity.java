@@ -5,8 +5,8 @@ import java.util.Locale;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -99,6 +99,8 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.d(TAG, "onOptionsItemSelected(" + item.getItemId() + ")");
+		boolean handled = true;
     	switch(item.getItemId()) {
     	case R.id.item_debug:
     		Log.d(TAG, "debug item selected");
@@ -115,8 +117,11 @@ public class MainActivity extends FragmentActivity {
     	case R.id.item_connections:
     		Log.d(TAG,  "connections selected");
     		break;
+    	default:
+    		handled = false;
+    		break;
     	}
-    	return(true);
+    	return(handled);
 	}
 	
 }

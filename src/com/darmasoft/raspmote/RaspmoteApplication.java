@@ -41,6 +41,16 @@ public class RaspmoteApplication extends Application {
 			return(null);
 		}
 	}
+	public static void host_deleted(int id) {
+		_instance.raspbmc_host_deleted(id);
+	}
+	
+	public void raspbmc_host_deleted(int id) {
+		if (_current_host_id == id) {
+			_current_host_id = -1;
+			_current_host = null;
+		}
+	}
 	
 	public int current_host_id() {
 		return(_current_host_id);

@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 
 public class RaspbmcHost extends DBObject {
 
@@ -63,10 +64,22 @@ public class RaspbmcHost extends DBObject {
 		_dirty = true;
 	}
 	
-	public boolean insert() {
-		DB d = new DB(RaspmoteApplication.get_context());
-		SQLiteDatabase db = d.getWritableDatabase();
+	public static String table_name() {
+		return _table_name;
+	}
+	
+	public boolean destroy() {
 		
+		int rows = RaspmoteApplication.get_context().getContentResolver().delete(RaspbmcHostProvider.CONTENT_URI.buildUpon().appendPath(Integer.toString(_id)).build(), null, null);
+		if (rows == 1) {
+			RaspmoteApplication.host_deleted(_id);
+			return(true);
+		} else {
+			return(false);
+		}
+	}
+	
+	public boolean insert() {
 		ContentValues values = new ContentValues();
 		values.clear();
 
@@ -80,15 +93,12 @@ public class RaspbmcHost extends DBObject {
    		values.put("updated_at", updated_at_str);
    		
    		try {
-			_id = (int) db.insertOrThrow(_table_name, null, values);
+   			Uri uri = RaspmoteApplication.get_context().getContentResolver().insert(RaspbmcHostProvider.CONTENT_URI, values);
+			_id = RaspbmcHostProvider.get_id_from_uri(uri);
 		} catch (SQLiteConstraintException e) {
-			db.close();
 			return(false);
 		}
-   	
-		db.close();
-
-		return(true);
+   		return(true);
 	}
 	
 	// selects

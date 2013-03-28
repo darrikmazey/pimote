@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="15"
+        android:minSdkVersion="10"
         android:targetSdkVersion="15" />
 	<uses-permission android:name="android.permission.INTERNET" />
     
@@ -24,6 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:exported="false" 
+            android:authorities="com.darmasoft.raspmote.raspbmc_host_provider" 
+            android:name="RaspbmcHostProvider">
+        </provider>
     </application>
 
 </manifest>
