@@ -9,7 +9,7 @@ public class DB extends SQLiteOpenHelper {
 	private static final String TAG = "raspmote:DB";
 	
 	private static final String DATABASE_NAME = "raspmote_db";
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 8;
 	
 	public DB(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);

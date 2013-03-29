@@ -10,5 +10,6 @@
     <string name="string_connections">Manage Connections</string>
     <string name="connection_list_item_context_delete_title">Delete Connection</string>
     <string name="connection_list_item_context_edit_title">Edit Connection</string>
+    <string name="remote_title">Remote</string>
 
 </resources>

@@ -1,7 +1,9 @@
 package com.darmasoft.raspmote;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.darmasoft.raspmote.Log;
+import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 
 public class MainActivity extends FragmentActivity {
 
@@ -46,6 +49,10 @@ public class MainActivity extends FragmentActivity {
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		
+		if (((RaspmoteApplication)getApplication()).current_host_id() == -1) {
+			mViewPager.setCurrentItem(1);
+		}
 
 	}
 
@@ -71,19 +78,25 @@ public class MainActivity extends FragmentActivity {
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
-			if (position >= 0) {
-				Fragment fragment = new ConnectionListFragment();
-				Bundle args = new Bundle();
-				fragment.setArguments(args);
-				return(fragment);
+			Fragment fragment;
+			switch(position) {
+				case 0:
+					fragment = new RemoteFragment();
+					return(fragment);
+				case 1:
+					fragment = new ConnectionListFragment();
+					Bundle args = new Bundle();
+					fragment.setArguments(args);
+					return(fragment);
+				default:
+					return(null);
 			}
-			return(null);
 		}
 
 		@Override
 		public int getCount() {
 			// Show 1 total page.
-			return 1;
+			return 2;
 		}
 
 		@Override
@@ -91,6 +104,8 @@ public class MainActivity extends FragmentActivity {
 			Locale l = Locale.getDefault();
 			switch (position) {
 			case 0:
+				return getString(R.string.remote_title).toUpperCase(l);
+			case 1:
 				return getString(R.string.connection_list_title).toUpperCase(l);
 			}
 			return null;
@@ -104,18 +119,19 @@ public class MainActivity extends FragmentActivity {
     	switch(item.getItemId()) {
     	case R.id.item_debug:
     		Log.d(TAG, "debug item selected");
-    		RaspbmcHost host = new RaspbmcHost("raspbmc", "192.168.248.198", 80, 0, new Date(), new Date(), true);
-    		if (host.insert()) {
-    			Log.d(TAG,  "inserted host with id: "+ host.id());
-    		} else {
-    			Log.e(TAG, "failed to insert host");
-    		}
+    		JSONRPCRequestTask task = new JSONRPCRequestTask();
+    		Map<String,Object> params = new HashMap<String,Object>();
+    		params.put("text", " ");
+    		params.put("done", true);
+    		JSONRPC2Request req = new JSONRPC2Request("Input.SendText", params, 0);
+    		task.execute(req);
     		break;
     	case R.id.action_settings:
     		Log.d(TAG, "settings selected");
     		break;
     	case R.id.item_connections:
     		Log.d(TAG,  "connections selected");
+    		mViewPager.setCurrentItem(1);
     		break;
     	default:
     		handled = false;

@@ -1,5 +1,7 @@
 package com.darmasoft.raspmote;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -57,6 +59,31 @@ public class RaspbmcHost extends DBObject {
 		_port = port;
 		_new_record = new_record;
 		_dirty = new_record;
+	}
+	
+	public Uri server_uri()
+	{
+		Uri uri;
+		if (_port == 80) {
+			uri = Uri.parse("http://" + _host + "/jsonrpc");
+		} else {
+			uri = Uri.parse("http://" + _host + ":" + _port + "/jsonrpc");
+		}
+		return(uri);
+	}
+
+	public URL server_url()	{
+		URL url;
+		try {
+			if (_port == 80) {
+				url = new URL("http://" + _host + "/jsonrpc");
+			} else {
+				url = new URL("http://" + _host + ":" + _port + "/jsonrpc");
+			}
+		} catch (MalformedURLException e) {
+			return(null);
+		}
+		return(url);
 	}
 
 	public String name() {
@@ -161,14 +188,15 @@ public class RaspbmcHost extends DBObject {
 		return(null);
 	}
 
+	public static int count() {
+		Cursor c = RaspbmcHost.all();
+		return(c.getCount());
+	}
+	
 	public static Cursor all() {
 		Log.d(TAG, "all()");
-		DB d = new DB(RaspmoteApplication.get_context());
-		SQLiteDatabase db = d.getReadableDatabase();
-		
-		String[] columns = new String[] { "_id", "name", "host", "port" };
-		Cursor c = db.query(_table_name, columns, null, null, null, null, null);
-		return(c);
+		Cursor cursor = RaspmoteApplication.get_context().getContentResolver().query(RaspbmcHostProvider.CONTENT_URI,  null, null, null, null);
+		return(cursor);
 	}
 	
 	static public boolean create_table(SQLiteDatabase db) {
