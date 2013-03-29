@@ -1,4 +1,6 @@
-package com.darmasoft.raspmote;
+package com.darmasoft.pimote;
+
+import com.darmasoft.pimote.R;
 
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -24,7 +26,7 @@ import android.support.v4.app.LoaderManager;
 public class ConnectionListFragment extends Fragment
 	implements OnItemClickListener, OnItemLongClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-	private static final String TAG = "raspmote:ConnectionListFrament";
+	private static final String TAG = "pimote:ConnectionListFrament";
 	private SimpleCursorAdapter _adapter = null;
 	
 	private int _context_item_id = -1;
@@ -162,7 +164,7 @@ public class ConnectionListFragment extends Fragment
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		((RaspmoteApplication)this.getActivity().getApplication()).set_current_host_id((int) id);
+		((PimoteApplication)this.getActivity().getApplication()).set_current_host_id((int) id);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.darmasoft.raspmote;
+package com.darmasoft.pimote;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

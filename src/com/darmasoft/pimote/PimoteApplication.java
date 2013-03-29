@@ -1,4 +1,4 @@
-package com.darmasoft.raspmote;
+package com.darmasoft.pimote;
 
 import java.net.URL;
 import java.util.Date;
@@ -12,10 +12,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-public class RaspmoteApplication extends Application {
+public class PimoteApplication extends Application {
 
-	private static final String TAG = "raspmote:RaspmoteApplication";
-	private static RaspmoteApplication _instance = null;
+	private static final String TAG = "pimote:PimoteApplication";
+	private static PimoteApplication _instance = null;
 	private JSONRPC2Session _rpc_session = null;
 	
 	private int _current_host_id = -1;
@@ -24,7 +24,7 @@ public class RaspmoteApplication extends Application {
 	
 	private JSONRPCStatusListener _status_listener = null;
 	
-	public RaspmoteApplication() {
+	public PimoteApplication() {
 		_instance = this;
 	}
 
@@ -46,7 +46,7 @@ public class RaspmoteApplication extends Application {
 		return(_instance);
 	}
 	
-	public static RaspmoteApplication get_app() {
+	public static PimoteApplication get_app() {
 		return(_instance);
 	}
 	

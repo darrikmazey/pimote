@@ -1,4 +1,4 @@
-package com.darmasoft.raspmote;
+package com.darmasoft.pimote;
 
 import java.util.List;
 
@@ -12,14 +12,14 @@ import android.net.Uri;
 public class RaspbmcHostProvider extends ContentProvider {
 	private DB _d = null;
 
-	private static final String TAG = "raspmote:RaspbmcHostProvider";
+	private static final String TAG = "pimote:RaspbmcHostProvider";
 	
 	private static UriMatcher _uri_matcher;
 	private static final String _collection_path = "raspbmc_hosts";
 	private static final int _collection_token = 1;
 	private static final String _member_path = "raspbmc_hosts/#";
 	private static final int _member_token = 2;
-	private static final String _authority = "com.darmasoft.raspmote.raspbmc_host_provider";
+	private static final String _authority = "com.darmasoft.pimote.raspbmc_host_provider";
 	private static final Uri _base_uri = Uri.parse("content://" + _authority);
 	public static final Uri CONTENT_URI = _base_uri.buildUpon().appendPath(_collection_path).build();
 
@@ -57,9 +57,9 @@ public class RaspbmcHostProvider extends ContentProvider {
 	public String getType(Uri uri) {
 		switch(_uri_matcher.match(uri)) {
 			case _collection_token:
-				return("vnd.android.cursor.dir/vnd.com.darmasoft.raspmote.raspbmc_host_provider.hosts");
+				return("vnd.android.cursor.dir/vnd.com.darmasoft.pimote.raspbmc_host_provider.hosts");
 			case _member_token:
-				return("vnd.android.cursor.item/vnd.com.darmasoft.raspmote.raspbmc_host_provider.hosts");
+				return("vnd.android.cursor.item/vnd.com.darmasoft.pimote.raspbmc_host_provider.hosts");
 			default:
 				throw new UnsupportedOperationException("URI: " + uri + " not supported.");
 		}

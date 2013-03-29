@@ -1,4 +1,4 @@
-package com.darmasoft.raspmote;
+package com.darmasoft.pimote;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,7 +13,7 @@ import android.net.Uri;
 
 public class RaspbmcHost extends DBObject {
 
-	private static final String TAG = "raspmote:RaspbmcHost";
+	private static final String TAG = "pimote:RaspbmcHost";
 	private static final String _table_name = "raspbmc_hosts";
 	private static final String _create_table_sql = "create table " + _table_name + " ( " +
 			"_id integer primary key, " +
@@ -119,9 +119,9 @@ public class RaspbmcHost extends DBObject {
 	
 	public boolean destroy() {
 		
-		int rows = RaspmoteApplication.get_context().getContentResolver().delete(RaspbmcHostProvider.CONTENT_URI.buildUpon().appendPath(Integer.toString(_id)).build(), null, null);
+		int rows = PimoteApplication.get_context().getContentResolver().delete(RaspbmcHostProvider.CONTENT_URI.buildUpon().appendPath(Integer.toString(_id)).build(), null, null);
 		if (rows == 1) {
-			RaspmoteApplication.host_deleted(_id);
+			PimoteApplication.host_deleted(_id);
 			return(true);
 		} else {
 			return(false);
@@ -141,7 +141,7 @@ public class RaspbmcHost extends DBObject {
    		values.put("created_at", created_at_str);
    		values.put("updated_at", updated_at_str);
    		
-   		Uri uri = RaspmoteApplication.get_context().getContentResolver().insert(RaspbmcHostProvider.CONTENT_URI, values);
+   		Uri uri = PimoteApplication.get_context().getContentResolver().insert(RaspbmcHostProvider.CONTENT_URI, values);
    		_id = RaspbmcHostProvider.get_id_from_uri(uri);
 
    		return(true);
@@ -168,7 +168,7 @@ public class RaspbmcHost extends DBObject {
 		values.put("port", _port);
 
 		Uri uri = RaspbmcHostProvider.CONTENT_URI.buildUpon().appendPath(Integer.toString(_id)).build();
-		int rows = RaspmoteApplication.get_context().getContentResolver().update(uri, values, null, null);
+		int rows = PimoteApplication.get_context().getContentResolver().update(uri, values, null, null);
 		if (rows == 1) {
 			_dirty = false;
 			_new_record = false;
@@ -182,7 +182,7 @@ public class RaspbmcHost extends DBObject {
 	public static RaspbmcHost find_by_id(int id) {
 		if (id > 0) {
 			Uri uri = RaspbmcHostProvider.CONTENT_URI.buildUpon().appendPath(Integer.toString(id)).build();
-			Cursor cursor = RaspmoteApplication.get_context().getContentResolver().query(uri, null, null, null, null);
+			Cursor cursor = PimoteApplication.get_context().getContentResolver().query(uri, null, null, null, null);
 			return(RaspbmcHost.from_cursor(cursor));
 		}
 		return(null);
@@ -195,7 +195,7 @@ public class RaspbmcHost extends DBObject {
 	
 	public static Cursor all() {
 		Log.d(TAG, "all()");
-		Cursor cursor = RaspmoteApplication.get_context().getContentResolver().query(RaspbmcHostProvider.CONTENT_URI,  null, null, null, null);
+		Cursor cursor = PimoteApplication.get_context().getContentResolver().query(RaspbmcHostProvider.CONTENT_URI,  null, null, null, null);
 		return(cursor);
 	}
 	

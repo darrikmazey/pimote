@@ -1,5 +1,6 @@
-package com.darmasoft.raspmote;
+package com.darmasoft.pimote;
 
+import com.darmasoft.pimote.R;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 
 import android.app.Activity;
@@ -14,7 +15,7 @@ import android.widget.TextView;
 
 public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 
-	private static final String TAG = "raspmote:RemoteFragment";
+	private static final String TAG = "pimote:RemoteFragment";
 	
 	private TextView _tv_status = null;
 	
@@ -110,15 +111,15 @@ public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 	@Override
 	public void onPause() {
 		Log.d(TAG, "onPause()");
-		RaspmoteApplication.get_app().set_status_listener(null);
+		PimoteApplication.get_app().set_status_listener(null);
 		super.onPause();
 	}
 
 	@Override
 	public void onResume() {
 		Log.d(TAG, "onResume()");
-		RaspmoteApplication.get_app().set_status_listener(this);
-		set_status_textview(RaspmoteApplication.get_app().host_status());
+		PimoteApplication.get_app().set_status_listener(this);
+		set_status_textview(PimoteApplication.get_app().host_status());
 		super.onResume();
 	}
 
@@ -139,10 +140,10 @@ public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 		Log.d(TAG, "setUserVisibleHint(" + isVisibleToUser + ")");
 		/*
 		if (isVisibleToUser) {
-			RaspmoteApplication.get_app().set_status_listener(this);
-			set_status_textview(RaspmoteApplication.get_app().host_status());
+			pimoteApplication.get_app().set_status_listener(this);
+			set_status_textview(pimoteApplication.get_app().host_status());
 		} else {
-			RaspmoteApplication.get_app().set_status_listener(null);
+			PimoteApplication.get_app().set_status_listener(null);
 		}
 		*/
 		super.setUserVisibleHint(isVisibleToUser);

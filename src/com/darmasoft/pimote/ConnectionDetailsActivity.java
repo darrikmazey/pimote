@@ -1,6 +1,8 @@
-package com.darmasoft.raspmote;
+package com.darmasoft.pimote;
 
 import java.util.Date;
+
+import com.darmasoft.pimote.R;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +14,7 @@ import android.widget.TextView;
 
 public class ConnectionDetailsActivity extends Activity {
 
-	private static final String TAG = "raspmote:ConnectionDetailsActivity";
+	private static final String TAG = "pimote:ConnectionDetailsActivity";
 	
 	private int _host_id = -1;
 	private RaspbmcHost _host = null;

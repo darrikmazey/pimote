@@ -1,4 +1,6 @@
-package com.darmasoft.raspmote;
+package com.darmasoft.pimote;
+
+import com.darmasoft.pimote.R;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +10,7 @@ import android.view.ViewGroup;
 
 public class ConnectionDetailsFragment extends Fragment {
 
-	private static final String TAG = "raspmote:ConnectionDetailsFragment";
+	private static final String TAG = "pimote:ConnectionDetailsFragment";
 	
 	private RaspbmcHost _host = null;
 	

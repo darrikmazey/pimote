@@ -1,4 +1,4 @@
-package com.darmasoft.raspmote;
+package com.darmasoft.pimote;
 
 import java.util.Date;
 
@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class DBObject extends Object {
 	
-	private static final String TAG = "raspmote:DBObject";
+	private static final String TAG = "pimote:DBObject";
 	protected static String _table_name = null;
 	protected static String _create_table_sql = null;
 

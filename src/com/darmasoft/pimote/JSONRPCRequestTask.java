@@ -1,4 +1,4 @@
-package com.darmasoft.raspmote;
+package com.darmasoft.pimote;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import android.os.AsyncTask;
 
 public class JSONRPCRequestTask extends AsyncTask<JSONRPC2Request, Integer, ArrayList<JSONRPC2Response>> {
 
-	private static final String TAG = "raspmote:JSONRPCRequestTask";
+	private static final String TAG = "pimote:JSONRPCRequestTask";
 	
 	private static final int NO_MATCH = -1;
 	private static final int CONNECTION_REFUSED = 1;
@@ -20,10 +20,10 @@ public class JSONRPCRequestTask extends AsyncTask<JSONRPC2Request, Integer, Arra
 	@Override
 	protected ArrayList<JSONRPC2Response> doInBackground(JSONRPC2Request... reqs) {
 		Log.d(TAG, "doInBackground()");
-		JSONRPC2Session session = ((RaspmoteApplication)RaspmoteApplication.get_context()).rpc_session();
+		JSONRPC2Session session = ((PimoteApplication)PimoteApplication.get_context()).rpc_session();
 		ArrayList<JSONRPC2Response> responses = new ArrayList<JSONRPC2Response>();
 		if (session == null) {
-			RaspmoteApplication.get_app().set_host_status(false, false);
+			PimoteApplication.get_app().set_host_status(false, false);
 			return(responses);
 		}
 		for (int i = 0; i < reqs.length; i++) {
@@ -32,12 +32,12 @@ public class JSONRPCRequestTask extends AsyncTask<JSONRPC2Request, Integer, Arra
 			try {
 				response = session.send(req);
 				responses.add(response);
-				RaspmoteApplication.get_app().set_host_status(true, false);
+				PimoteApplication.get_app().set_host_status(true, false);
 			} catch (JSONRPC2SessionException e) {
 				switch(parseException(e)) {
 					case CONNECTION_REFUSED:
 						Log.e(TAG, "CONNECTION REFUSED");
-						RaspmoteApplication.get_app().set_host_status(false, false);
+						PimoteApplication.get_app().set_host_status(false, false);
 						break;
 					case NO_MATCH:
 						Log.e(TAG, "UNKNOWN ERROR: " + e.getMessage());
@@ -59,7 +59,7 @@ public class JSONRPCRequestTask extends AsyncTask<JSONRPC2Request, Integer, Arra
 				Log.d(TAG, "error!");
 			}
 		}
-		RaspmoteApplication.get_app().notify_status_listener();
+		PimoteApplication.get_app().notify_status_listener();
 	}
 
 	private int parseException(JSONRPC2SessionException e) {

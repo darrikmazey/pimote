@@ -1,4 +1,4 @@
-package com.darmasoft.raspmote;
+package com.darmasoft.pimote;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -13,12 +13,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.darmasoft.raspmote.Log;
+
+import com.darmasoft.pimote.Log;
+import com.darmasoft.pimote.R;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 
 public class MainActivity extends FragmentActivity {
 
-	private static final String TAG = "raspmote:MainActivity";
+	private static final String TAG = "pimote:MainActivity";
 	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -50,7 +52,7 @@ public class MainActivity extends FragmentActivity {
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		
-		if (((RaspmoteApplication)getApplication()).current_host_id() == -1) {
+		if (((PimoteApplication)getApplication()).current_host_id() == -1) {
 			mViewPager.setCurrentItem(1);
 		}
 
