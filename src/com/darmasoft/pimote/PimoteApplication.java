@@ -17,6 +17,7 @@ public class PimoteApplication extends Application {
 	private static final String TAG = "pimote:PimoteApplication";
 	private static PimoteApplication _instance = null;
 	private JSONRPC2Session _rpc_session = null;
+	private JSONRPCServer _server = null;
 	
 	private int _current_host_id = -1;
 	private boolean _current_status = false;
@@ -40,6 +41,7 @@ public class PimoteApplication extends Application {
 			configure_rpc_session();
 			Log.d(TAG, "Only one host.  Using: " + _current_host_id);
 		}
+		_server = new JSONRPCServer();
 	}
 
 	public static Context get_context() {
@@ -48,6 +50,10 @@ public class PimoteApplication extends Application {
 	
 	public static PimoteApplication get_app() {
 		return(_instance);
+	}
+	
+	public JSONRPCServer json_rpc_server() {
+		return(_server);
 	}
 	
 	public RaspbmcHost current_host() {
@@ -135,5 +141,28 @@ public class PimoteApplication extends Application {
 		JSONRPCRequestTask task = new JSONRPCRequestTask();
 		JSONRPC2Request req = new JSONRPC2Request("JSONRPC.Ping", 0);
 		task.execute(req);
+	}
+	
+	public void handle_pi_response(PiResponse res) {
+		Log.d(TAG, "handle_pi_response(" + res.pi_request().method() + ")");
+		switch(res.pi_request().method_num()) {
+			case PiRequest.METHOD_PING:
+				handle_pi_response((PingResponse)res);
+				break;
+			case PiRequest.METHOD_GET_ACTIVE_PLAYERS:
+				handle_pi_response((GetActivePlayersResponse)res);
+				break;
+			default:
+				Log.d(TAG, "UNHANDLED RESPONSE TYPE!");
+				break;
+		}
+	}
+	
+	public void handle_pi_response(PingResponse res) {
+		Log.d(TAG, "handle_pi_response(PingResponse: " + res.pi_request().method() + ")");
+	}
+	
+	public void handle_pi_response(GetActivePlayersResponse res) {
+		Log.d(TAG, "handle_pi_response(GetActivePlayersResponse: " + res.pi_request().method() + ")");
 	}
 }

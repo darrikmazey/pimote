@@ -121,12 +121,12 @@ public class MainActivity extends FragmentActivity {
     	switch(item.getItemId()) {
     	case R.id.item_debug:
     		Log.d(TAG, "debug item selected");
-    		JSONRPCRequestTask task = new JSONRPCRequestTask();
-    		Map<String,Object> params = new HashMap<String,Object>();
-    		params.put("text", " ");
-    		params.put("done", true);
-    		JSONRPC2Request req = new JSONRPC2Request("Input.SendText", params, 0);
-    		task.execute(req);
+//    		JSONRPCRequestTask task = new JSONRPCRequestTask();
+//    		Map<String,Object> params = new HashMap<String,Object>();
+//    		JSONRPC2Request req = new JSONRPC2Request("Player.GetActivePlayers", params, 0);
+//    		task.execute(req);
+    		GetActivePlayersRequest req = new GetActivePlayersRequest();
+    		PimoteApplication.get_app().json_rpc_server().queue_request(req);
     		break;
     	case R.id.action_settings:
     		Log.d(TAG, "settings selected");

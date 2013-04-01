@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:id="@+id/fragment_remote_dpad"
+		    android:layout_width="250dip"
+		    android:layout_height="175dip"
+		    android:layout_centerHorizontal="true" >
+		    
+	        <ImageButton
+	            android:id="@+id/fragment_remote_select"
+	            android:layout_width="50dip"
+	            android:layout_height="50dip"
+	            android:layout_centerInParent="true"
+	            android:src="@drawable/select"
+	            android:text="Select" />
+	        
+	        <ImageButton
+	            android:id="@+id/fragment_remote_left"
+	            android:layout_width="50dip"
+	            android:layout_height="50dip"
+	            android:layout_toLeftOf="@id/fragment_remote_select"
+	            android:layout_centerVertical="true"
+	            android:layout_marginRight="5dip"
+	            android:src="@drawable/left_arrow"
+	            android:text="Left" />
+	        
+	        <ImageButton
+	            android:id="@+id/fragment_remote_right"
+	            android:layout_width="50dip"
+	            android:layout_height="50dip"
+	            android:layout_toRightOf="@id/fragment_remote_select"
+	            android:layout_marginLeft="5dip"
+	            android:layout_centerVertical="true"
+	            android:src="@drawable/right_arrow"
+	            android:text="Right" />
+	        
+	        <ImageButton
+	            android:id="@+id/fragment_remote_up"
+	            android:layout_width="50dip"
+	            android:layout_height="50dip"
+	            android:layout_above="@id/fragment_remote_select"
+	            android:layout_marginBottom="5dip"
+	            android:layout_centerHorizontal="true"
+	            android:src="@drawable/up_arrow"
+	            android:text="Up" />
+	        
+	        <ImageButton
+	            android:id="@+id/fragment_remote_down"
+	            android:layout_width="50dip"
+	            android:layout_height="50dip"
+	            android:layout_below="@id/fragment_remote_select"
+	            android:layout_marginTop="5dip"
+	            android:layout_centerHorizontal="true"
+	            android:src="@drawable/down_arrow"
+	            android:text="Down" />
+    
+</RelativeLayout>

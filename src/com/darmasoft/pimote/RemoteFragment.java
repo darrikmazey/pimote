@@ -1,5 +1,8 @@
 package com.darmasoft.pimote;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.darmasoft.pimote.R;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 
@@ -11,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
@@ -33,55 +37,26 @@ public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 		View v = inflater.inflate(R.layout.fragment_remote, null);
 		_tv_status = (TextView)v.findViewById(R.id.fragment_remote_status);
 		
-		Button b = null;
-		b = (Button)v.findViewById(R.id.fragment_remote_select);
+		ImageButton b = null;
+		
+		b = (ImageButton)v.findViewById(R.id.fragment_remote_play_controls_play);
 		b.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				selectClicked();
+				playPauseClicked();
 			}
 		});
+
 		
-		b = (Button)v.findViewById(R.id.fragment_remote_up);
-		b.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				upClicked();
-			}
-		});
-		
-		b = (Button)v.findViewById(R.id.fragment_remote_down);
-		b.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				downClicked();
-			}
-		});
-		
-		b = (Button)v.findViewById(R.id.fragment_remote_left);
-		b.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				leftClicked();
-			}
-		});
-		
-		b = (Button)v.findViewById(R.id.fragment_remote_right);
-		b.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				rightClicked();
-			}
-		});
-		
-		b = (Button)v.findViewById(R.id.fragment_remote_back);
-		b.setOnClickListener(new View.OnClickListener() {
+		Button btn = null;
+		btn = (Button)v.findViewById(R.id.fragment_remote_back);
+		btn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				backClicked();
 			}
 		});
-		b.setOnLongClickListener(new View.OnLongClickListener() {
+		btn.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
 				backLongPressed();
@@ -89,16 +64,16 @@ public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 			}
 		});
 		
-		b = (Button)v.findViewById(R.id.fragment_remote_osd);
-		b.setOnClickListener(new View.OnClickListener() {
+		btn = (Button)v.findViewById(R.id.fragment_remote_osd);
+		btn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				osdClicked();
 			}
 		});
 		
-		b = (Button)v.findViewById(R.id.fragment_remote_menu);
-		b.setOnClickListener(new View.OnClickListener() {
+		btn = (Button)v.findViewById(R.id.fragment_remote_menu);
+		btn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				menuClicked();
@@ -165,41 +140,6 @@ public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 		}
 	}
 	
-	public void leftClicked() {
-		Log.d(TAG, "leftClicked()");
-		JSONRPCRequestTask task = new JSONRPCRequestTask();
-		JSONRPC2Request req = new JSONRPC2Request("Input.Left", 0);
-		task.execute(req);
-	}
-	
-	public void rightClicked() {
-		Log.d(TAG, "rightClicked()");
-		JSONRPCRequestTask task = new JSONRPCRequestTask();
-		JSONRPC2Request req = new JSONRPC2Request("Input.Right", 0);
-		task.execute(req);
-	}
-	
-	public void selectClicked() {
-		Log.d(TAG, "selectClicked()");
-		JSONRPCRequestTask task = new JSONRPCRequestTask();
-		JSONRPC2Request req = new JSONRPC2Request("Input.Select", 0);
-		task.execute(req);
-	}
-	
-	public void upClicked() {
-		Log.d(TAG, "upClicked()");
-		JSONRPCRequestTask task = new JSONRPCRequestTask();
-		JSONRPC2Request req = new JSONRPC2Request("Input.Up", 0);
-		task.execute(req);
-	}
-	
-	public void downClicked() {
-		Log.d(TAG, "downClicked()");
-		JSONRPCRequestTask task = new JSONRPCRequestTask();
-		JSONRPC2Request req = new JSONRPC2Request("Input.Down", 0);
-		task.execute(req);
-	}
-	
 	public void backClicked() {
 		Log.d(TAG, "backClicked()");
 		JSONRPCRequestTask task = new JSONRPCRequestTask();
@@ -228,4 +168,12 @@ public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 		task.execute(req);
 	}
 	
+	public void playPauseClicked() {
+		Log.d(TAG, "playPauseClicked()");
+		JSONRPCRequestTask task = new JSONRPCRequestTask();
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("playerid", 1);
+		JSONRPC2Request req = new JSONRPC2Request("Player.PlayPause", params, 0);
+		task.execute(req);
+	}
 }

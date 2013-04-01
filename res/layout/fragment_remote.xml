@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="#333333"
     >
     
 	<TextView android:id="@+id/fragment_remote_status"
@@ -14,76 +15,54 @@
 	    android:gravity="center"
 	    />
 	
-		<RelativeLayout
-		    android:id="@+id/fragment_remote_dpad"
-		    android:layout_width="225dip"
-		    android:layout_height="225dip"
-		    android:layout_centerInParent="true" >
-		    
-	        <Button
-	            android:id="@+id/fragment_remote_select"
-	            android:layout_width="75dip"
-	            android:layout_height="75dip"
-	            android:layout_centerInParent="true"
-	            android:text="Select" />
-	        
-	        <Button
-	            android:id="@+id/fragment_remote_left"
-	            android:layout_width="75dip"
-	            android:layout_height="75dip"
-	            android:layout_toLeftOf="@id/fragment_remote_select"
-	            android:layout_centerVertical="true"
-	            android:text="Left" />
-	        
-	        <Button
-	            android:id="@+id/fragment_remote_right"
-	            android:layout_width="75dip"
-	            android:layout_height="75dip"
-	            android:layout_toRightOf="@id/fragment_remote_select"
-	            android:layout_centerVertical="true"
-	            android:text="Right" />
-	        
-	        <Button
-	            android:id="@+id/fragment_remote_up"
-	            android:layout_width="75dip"
-	            android:layout_height="75dip"
-	            android:layout_above="@id/fragment_remote_select"
-	            android:layout_centerHorizontal="true"
-	            android:text="Up" />
-	        
-	        <Button
-	            android:id="@+id/fragment_remote_down"
-	            android:layout_width="75dip"
-	            android:layout_height="75dip"
-	            android:layout_below="@id/fragment_remote_select"
-	            android:layout_centerHorizontal="true"
-	            android:text="Down" />
-		</RelativeLayout>
+		<LinearLayout
+		    android:id="@+id/fragment_remote_play_controls"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingLeft="20dip"
+		    android:paddingRight="20dip"
+		    android:layout_marginTop="70dip" >
 		
+		    <ImageButton
+		        android:id="@+id/fragment_remote_play_controls_play"
+		        android:layout_width="50dip"
+		        android:layout_height="50dip"
+		        android:src="@drawable/right_arrow"
+		        android:text="Play" />
+		    
+		</LinearLayout>
+
+		<fragment android:name="com.darmasoft.pimote.RemoteDPadFragment"
+		    android:id="@+id/fragment_dpad"
+		    android:layout_below="@id/fragment_remote_play_controls"
+		    android:layout_width="250dip"
+		    android:layout_height="175dip"
+		    android:layout_centerHorizontal="true" />
+			
 		<FrameLayout android:id="@+id/fragment_remote_other_buttons"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
-		    android:layout_marginTop="30dip"
+		    android:layout_marginTop="15dip"
 		    android:paddingLeft="20dip"
 		    android:paddingRight="20dip"
 		    android:paddingBottom="20dip"
-		    android:layout_below="@id/fragment_remote_dpad" >
+		    android:layout_below="@id/fragment_dpad" >
 	        
 		<Button android:id="@+id/fragment_remote_back"
-		    android:layout_width="75dip"
-		    android:layout_height="75dip"
+		    android:layout_width="50dip"
+		    android:layout_height="50dip"
 		    android:layout_gravity="left"
 		    android:text="Back" />
 	        
 		<Button android:id="@+id/fragment_remote_osd"
-		    android:layout_width="75dip"
-		    android:layout_height="75dip"
+		    android:layout_width="50dip"
+		    android:layout_height="50dip"
 		    android:layout_gravity="center"
 		    android:text="OSD" />
 		
 		<Button android:id="@+id/fragment_remote_menu"
-		    android:layout_width="75dip"
-		    android:layout_height="75dip"
+		    android:layout_width="50dip"
+		    android:layout_height="50dip"
 		    android:layout_gravity="right"
 		    android:text="Menu" />
 	        </FrameLayout>
