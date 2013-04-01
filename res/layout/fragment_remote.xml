@@ -24,10 +24,18 @@
 		    android:layout_marginTop="70dip" >
 		
 		    <ImageButton
+		        android:id="@+id/fragment_remote_play_controls_stop"
+		        android:layout_width="50dip"
+		        android:layout_height="50dip"
+		        android:background="@drawable/stop"
+		        android:layout_marginRight="10dip"
+		        android:text="Stop" />
+		    
+		    <ImageButton
 		        android:id="@+id/fragment_remote_play_controls_play"
 		        android:layout_width="50dip"
 		        android:layout_height="50dip"
-		        android:src="@drawable/right_arrow"
+		        android:background="@drawable/play"
 		        android:text="Play" />
 		    
 		</LinearLayout>
@@ -48,22 +56,25 @@
 		    android:paddingBottom="20dip"
 		    android:layout_below="@id/fragment_dpad" >
 	        
-		<Button android:id="@+id/fragment_remote_back"
+		<ImageButton android:id="@+id/fragment_remote_back"
 		    android:layout_width="50dip"
 		    android:layout_height="50dip"
 		    android:layout_gravity="left"
+		    android:background="@drawable/back"
 		    android:text="Back" />
 	        
-		<Button android:id="@+id/fragment_remote_osd"
+		<ImageButton android:id="@+id/fragment_remote_osd"
 		    android:layout_width="50dip"
 		    android:layout_height="50dip"
 		    android:layout_gravity="center"
+		    android:background="@drawable/osd"
 		    android:text="OSD" />
 		
-		<Button android:id="@+id/fragment_remote_menu"
+		<ImageButton android:id="@+id/fragment_remote_menu"
 		    android:layout_width="50dip"
 		    android:layout_height="50dip"
 		    android:layout_gravity="right"
+		    android:background="@drawable/context_menu"
 		    android:text="Menu" />
 	        </FrameLayout>
 </RelativeLayout>

@@ -1,4 +1,7 @@
-package com.darmasoft.pimote;
+package com.darmasoft.pimote.Requests;
+
+import com.darmasoft.pimote.Log;
+import com.darmasoft.pimote.PiResponse;
 
 public class PingResponse extends PiResponse {
 

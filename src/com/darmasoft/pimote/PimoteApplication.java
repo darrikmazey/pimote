@@ -3,6 +3,11 @@ package com.darmasoft.pimote;
 import java.net.URL;
 import java.util.Date;
 
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+
+import com.darmasoft.pimote.Requests.GetActivePlayersRequest;
+import com.darmasoft.pimote.Requests.PingRequest;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 import com.thetransactioncompany.jsonrpc2.client.JSONRPC2Session;
 
@@ -22,8 +27,13 @@ public class PimoteApplication extends Application {
 	private int _current_host_id = -1;
 	private boolean _current_status = false;
 	private Date _last_status_update = null;
+	private int _active_video_player = -1;
+	private boolean _player_paused = false;
 	
+	// listeners
 	private JSONRPCStatusListener _status_listener = null;
+	private HostChangedListener _host_listener = null;
+	private ActivePlayerListener _player_listener = null;
 	
 	public PimoteApplication() {
 		_instance = this;
@@ -80,6 +90,11 @@ public class PimoteApplication extends Application {
 	public void set_current_host_id(int hid) {
 		Log.d(TAG, "set_current_host_id(" + hid + ")");
 		Log.d(TAG, "old current_host_id: " + _current_host_id);
+		if ((hid > 0)&&(_current_host_id != hid)) {
+			if (_host_listener != null) {
+				_host_listener.hostChanged();
+			}
+		}
 		_current_host_id = hid;
 		configure_rpc_session();
 	}
@@ -94,6 +109,7 @@ public class PimoteApplication extends Application {
 			Log.d(TAG, "server_url: " + server_url.toString());
 			_rpc_session = new JSONRPC2Session(server_url);
 			ping_server();
+			get_active_players();
 		}
 	}
 	
@@ -112,6 +128,7 @@ public class PimoteApplication extends Application {
 	public void set_host_status(boolean st, boolean notify) {
 		Log.d(TAG, "set_host_status(" + st + ")");
 		_last_status_update = new Date();
+		boolean old_status = _current_status;
 		_current_status = st;
 		if (notify) {
 			notify_status_listener();
@@ -119,7 +136,7 @@ public class PimoteApplication extends Application {
 	}
 	
 	public void notify_status_listener() {
-		notify_status_listener(_current_status);
+		notify_status_listener(_current_status, is_playing_video());
 	}
 	
 	public JSONRPC2Session rpc_session() {
@@ -130,39 +147,53 @@ public class PimoteApplication extends Application {
 		_status_listener = listener;
 	}
 	
-	private void notify_status_listener(boolean status) {
+	public void set_host_changed_listener(HostChangedListener listener) {
+		_host_listener = listener;
+	}
+	
+	public void set_active_player_listener(ActivePlayerListener listener) {
+		_player_listener = listener;
+	}
+	
+	private void notify_status_listener(boolean status, boolean playing) {
 		if (_status_listener != null) {
 			_status_listener.statusChanged(status);
+			_status_listener.videoPlayersChanged(playing);
 		}
 	}
 	
-	private void ping_server() {
+	public void ping_server() {
 		Log.d(TAG, "ping_server()");
-		JSONRPCRequestTask task = new JSONRPCRequestTask();
-		JSONRPC2Request req = new JSONRPC2Request("JSONRPC.Ping", 0);
-		task.execute(req);
+		json_rpc_server().queue_request(new PingRequest());
 	}
 	
-	public void handle_pi_response(PiResponse res) {
-		Log.d(TAG, "handle_pi_response(" + res.pi_request().method() + ")");
-		switch(res.pi_request().method_num()) {
-			case PiRequest.METHOD_PING:
-				handle_pi_response((PingResponse)res);
-				break;
-			case PiRequest.METHOD_GET_ACTIVE_PLAYERS:
-				handle_pi_response((GetActivePlayersResponse)res);
-				break;
-			default:
-				Log.d(TAG, "UNHANDLED RESPONSE TYPE!");
-				break;
+	public void get_active_players() {
+		Log.d(TAG, "get_active_players()");
+		json_rpc_server().queue_request(new GetActivePlayersRequest());
+	}
+	
+	public boolean is_playing_video() {
+		return(_active_video_player > 0);
+	}
+	
+	public int active_video_player() {
+		return(_active_video_player);
+	}
+	
+	public void set_active_player(int player) {
+		Log.d(TAG, "set_active_player(" + player + ")");
+		_active_video_player = player;
+		if (_player_listener != null) {
+			_player_listener.activePlayerChanged(is_playing_video());
 		}
 	}
 	
-	public void handle_pi_response(PingResponse res) {
-		Log.d(TAG, "handle_pi_response(PingResponse: " + res.pi_request().method() + ")");
-	}
-	
-	public void handle_pi_response(GetActivePlayersResponse res) {
-		Log.d(TAG, "handle_pi_response(GetActivePlayersResponse: " + res.pi_request().method() + ")");
+	public void set_player_paused(boolean paused) {
+		if (_player_paused != paused) {
+			_player_paused = paused;
+			if (_player_listener != null) {
+				_player_listener.pauseChanged(_player_paused);
+			}
+		}
 	}
 }

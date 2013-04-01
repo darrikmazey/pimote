@@ -16,6 +16,17 @@ public class PiRequest {
 	
 	public static final int METHOD_PING = 1;
 	public static final int METHOD_GET_ACTIVE_PLAYERS = 2;
+	public static final int METHOD_INPUT_LEFT = 3;
+	public static final int METHOD_INPUT_RIGHT = 4;
+	public static final int METHOD_INPUT_UP = 5;
+	public static final int METHOD_INPUT_DOWN = 6;
+	public static final int METHOD_INPUT_SELECT = 7;
+	public static final int METHOD_INPUT_BACK = 8;
+	public static final int METHOD_INPUT_SHOW_OSD = 9;
+	public static final int METHOD_INPUT_CONTEXT_MENU = 10;
+	public static final int METHOD_PLAYER_PLAY_PAUSE = 11;
+	public static final int METHOD_INPUT_HOME = 12;
+	public static final int METHOD_PLAYER_STOP = 13;
 	
 	public PiRequest(String method, Map<String,Object> params, int id) {
 		_method = method;

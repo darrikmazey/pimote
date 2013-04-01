@@ -164,7 +164,7 @@ public class ConnectionListFragment extends Fragment
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		((PimoteApplication)this.getActivity().getApplication()).set_current_host_id((int) id);
+		PimoteApplication.get_app().set_current_host_id((int) id);
 	}
 
 	@Override

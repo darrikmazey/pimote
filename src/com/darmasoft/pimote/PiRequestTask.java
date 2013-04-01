@@ -46,6 +46,7 @@ public class PiRequestTask extends AsyncTask<PiRequest, Integer, ArrayList<PiRes
 						Log.e(TAG, "UNKNOWN ERROR: " + e.getMessage());
 						break;
 				}
+				PimoteApplication.get_app().json_rpc_server().request_finished(req);
 			}
 		}
 		return(responses);
@@ -57,7 +58,7 @@ public class PiRequestTask extends AsyncTask<PiRequest, Integer, ArrayList<PiRes
 		for (int i = 0; i < result.size(); i++) {
 			PiResponse res = result.get(i);
 			PimoteApplication.get_app().json_rpc_server().request_finished(res.pi_request());
-			PimoteApplication.get_app().handle_pi_response(res);
+			PimoteApplication.get_app().json_rpc_server().handle_pi_response(res);
 			if (res.status()) {
 				Log.d(TAG, "success: " + res.json_response_string());
 			} else {

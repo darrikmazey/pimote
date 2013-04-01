@@ -16,9 +16,10 @@ import android.view.MenuItem;
 
 import com.darmasoft.pimote.Log;
 import com.darmasoft.pimote.R;
+import com.darmasoft.pimote.Requests.GetActivePlayersRequest;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements HostChangedListener {
 
 	private static final String TAG = "pimote:MainActivity";
 	
@@ -140,6 +141,23 @@ public class MainActivity extends FragmentActivity {
     		break;
     	}
     	return(handled);
+	}
+
+	@Override
+	public void hostChanged() {
+		mViewPager.setCurrentItem(0);
+	}
+
+	@Override
+	protected void onPause() {
+		PimoteApplication.get_app().set_host_changed_listener(null);
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		PimoteApplication.get_app().set_host_changed_listener(this);
+		super.onResume();
 	}
 	
 }

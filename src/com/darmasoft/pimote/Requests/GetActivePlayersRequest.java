@@ -1,6 +1,8 @@
-package com.darmasoft.pimote;
+package com.darmasoft.pimote.Requests;
 
 import java.util.Map;
+
+import com.darmasoft.pimote.PiRequest;
 
 public class GetActivePlayersRequest extends PiRequest {
 	

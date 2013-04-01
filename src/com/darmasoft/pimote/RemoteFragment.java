@@ -4,6 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.darmasoft.pimote.R;
+import com.darmasoft.pimote.Requests.InputBackRequest;
+import com.darmasoft.pimote.Requests.InputContextMenuRequest;
+import com.darmasoft.pimote.Requests.InputHomeRequest;
+import com.darmasoft.pimote.Requests.InputShowOSDRequest;
+import com.darmasoft.pimote.Requests.PlayerPlayPauseRequest;
+import com.darmasoft.pimote.Requests.PlayerStopRequest;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 
 import android.app.Activity;
@@ -15,13 +21,16 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
+public class RemoteFragment extends Fragment implements JSONRPCStatusListener, ActivePlayerListener {
 
 	private static final String TAG = "pimote:RemoteFragment";
 	
 	private TextView _tv_status = null;
+	private LinearLayout _layout_play_controls = null;
+	private ImageButton _btn_play = null;
 	
 	public RemoteFragment() {
 	}
@@ -36,9 +45,19 @@ public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_remote, null);
 		_tv_status = (TextView)v.findViewById(R.id.fragment_remote_status);
+		_layout_play_controls = (LinearLayout)v.findViewById(R.id.fragment_remote_play_controls);
+		_btn_play = (ImageButton)v.findViewById(R.id.fragment_remote_play_controls_play);
 		
 		ImageButton b = null;
 		
+		b = (ImageButton)v.findViewById(R.id.fragment_remote_play_controls_stop);
+		b.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				stopClicked();
+			}
+		});
+
 		b = (ImageButton)v.findViewById(R.id.fragment_remote_play_controls_play);
 		b.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -47,16 +66,15 @@ public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 			}
 		});
 
-		
-		Button btn = null;
-		btn = (Button)v.findViewById(R.id.fragment_remote_back);
-		btn.setOnClickListener(new View.OnClickListener() {
+		ImageButton ibtn = null;
+		ibtn = (ImageButton)v.findViewById(R.id.fragment_remote_back);
+		ibtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				backClicked();
 			}
 		});
-		btn.setOnLongClickListener(new View.OnLongClickListener() {
+		ibtn.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
 				backLongPressed();
@@ -64,22 +82,23 @@ public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 			}
 		});
 		
-		btn = (Button)v.findViewById(R.id.fragment_remote_osd);
-		btn.setOnClickListener(new View.OnClickListener() {
+		ibtn = (ImageButton)v.findViewById(R.id.fragment_remote_osd);
+		ibtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				osdClicked();
 			}
 		});
 		
-		btn = (Button)v.findViewById(R.id.fragment_remote_menu);
-		btn.setOnClickListener(new View.OnClickListener() {
+		ibtn = (ImageButton)v.findViewById(R.id.fragment_remote_menu);
+		ibtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				menuClicked();
 			}
 		});
 		
+		activePlayerChanged(false);
 		return(v);
 	}
 
@@ -87,6 +106,7 @@ public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 	public void onPause() {
 		Log.d(TAG, "onPause()");
 		PimoteApplication.get_app().set_status_listener(null);
+		PimoteApplication.get_app().set_active_player_listener(null);
 		super.onPause();
 	}
 
@@ -94,7 +114,8 @@ public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 	public void onResume() {
 		Log.d(TAG, "onResume()");
 		PimoteApplication.get_app().set_status_listener(this);
-		set_status_textview(PimoteApplication.get_app().host_status());
+		PimoteApplication.get_app().set_active_player_listener(this);
+		set_status_textview(PimoteApplication.get_app().host_status(), PimoteApplication.get_app().is_playing_video());
 		super.onResume();
 	}
 
@@ -127,13 +148,24 @@ public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 	@Override
 	public void statusChanged(boolean status) {
 		Log.d(TAG, "statusChanged(" + status + ")");
-		set_status_textview(status);
+		set_status_textview(status, false);
 	}
 
-	private void set_status_textview(boolean status) {
+	@Override
+	public void videoPlayersChanged(boolean status) {
+		Log.d(TAG, "videoPlayersChanged(" + status + ")");
+		set_status_textview(PimoteApplication.get_app().host_status(), status);
+	}
+
+	private void set_status_textview(boolean status, boolean playing) {
 		if (status) {
-			_tv_status.setText("Connected");
-			_tv_status.setBackgroundColor(0xff00ff00);
+			if (playing) {
+				_tv_status.setText("Playing");
+				_tv_status.setBackgroundColor(0xff00ffff);
+			} else {
+				_tv_status.setText("Connected");
+				_tv_status.setBackgroundColor(0xff00ff00);
+			}
 		} else {
 			_tv_status.setText("Disconnected");
 			_tv_status.setBackgroundColor(0xffff0000);
@@ -142,38 +174,55 @@ public class RemoteFragment extends Fragment implements JSONRPCStatusListener {
 	
 	public void backClicked() {
 		Log.d(TAG, "backClicked()");
-		JSONRPCRequestTask task = new JSONRPCRequestTask();
-		JSONRPC2Request req = new JSONRPC2Request("Input.Back", 0);
-		task.execute(req);
+		PimoteApplication.get_app().json_rpc_server().queue_request(new InputBackRequest());
 	}
 	
 	public void backLongPressed() {
 		Log.d(TAG, "backLongPressed()");
-		JSONRPCRequestTask task = new JSONRPCRequestTask();
-		JSONRPC2Request req = new JSONRPC2Request("Input.Home", 0);
-		task.execute(req);
+		PimoteApplication.get_app().json_rpc_server().queue_request(new InputHomeRequest());
 	}
 
 	public void menuClicked() {
 		Log.d(TAG, "menuClicked()");
-		JSONRPCRequestTask task = new JSONRPCRequestTask();
-		JSONRPC2Request req = new JSONRPC2Request("Input.ContextMenu", 0);
-		task.execute(req);
+		PimoteApplication.get_app().json_rpc_server().queue_request(new InputContextMenuRequest());
 	}
 	
 	public void osdClicked() {
 		Log.d(TAG, "osdClicked()");
-		JSONRPCRequestTask task = new JSONRPCRequestTask();
-		JSONRPC2Request req = new JSONRPC2Request("Input.ShowOSD", 0);
-		task.execute(req);
+		PimoteApplication.get_app().json_rpc_server().queue_request(new InputShowOSDRequest());
 	}
 	
 	public void playPauseClicked() {
 		Log.d(TAG, "playPauseClicked()");
-		JSONRPCRequestTask task = new JSONRPCRequestTask();
-		Map<String,Object> params = new HashMap<String,Object>();
-		params.put("playerid", 1);
-		JSONRPC2Request req = new JSONRPC2Request("Player.PlayPause", params, 0);
-		task.execute(req);
+		PimoteApplication.get_app().json_rpc_server().queue_request(new PlayerPlayPauseRequest());
+	}
+	
+	public void stopClicked() {
+		Log.d(TAG, "stopClicked()");
+		PimoteApplication.get_app().json_rpc_server().queue_request(new PlayerStopRequest());
+	}
+
+	@Override
+	public void activePlayerChanged(boolean status) {
+		Log.d(TAG, "activePlayerChanged(" + status + ")");
+		if (status) {
+			_btn_play.setBackgroundResource(R.drawable.pause);
+			_layout_play_controls.setVisibility(View.VISIBLE);
+		} else {
+			_layout_play_controls.setVisibility(View.INVISIBLE);
+		}
+	}
+
+	@Override
+	public void pauseChanged(boolean paused) {
+		if (paused) {
+			_btn_play.setBackgroundResource(R.drawable.play);
+			_tv_status.setText("Paused");
+			_tv_status.setBackgroundColor(0xff00ffff);
+		} else {
+			_btn_play.setBackgroundResource(R.drawable.pause);
+			_tv_status.setText("Playing");
+			_tv_status.setBackgroundColor(0xff00ffff);
+		}
 	}
 }
